@@ -1,0 +1,53 @@
+HKCR
+{
+	ForceRemove comie67.console.1 = s 'ConsoleObject Class'
+	{
+		CLSID = s '{653823FB-32DD-4863-B8D8-4579A667400A}'
+	}
+	ForceRemove comie67.console = s 'ConsoleObject Class'
+	{
+		CLSID = s '{653823FB-32DD-4863-B8D8-4579A667400A}'
+		CurVer = s 'comie67.console.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {653823FB-32DD-4863-B8D8-4579A667400A} = s 'ConsoleObject Class'
+		{
+			ProgID = s 'comie67.console.1'
+			VersionIndependentProgID = s 'comie67.console'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{3803E745-F7C0-4F6F-BC81-578FE095A4E9}'
+		}
+	}
+}
+
+HKLM
+{
+	SOFTWARE
+	{
+		Microsoft
+		{   
+			Windows
+			{
+				CurrentVersion
+				{
+					Explorer
+					{
+						NoRemove 'Browser Helper Objects'
+						{
+							ForceRemove {653823FB-32DD-4863-B8D8-4579A667400A} = s 'ConsoleObject'
+							{
+								val NoExplorer = d '1'
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

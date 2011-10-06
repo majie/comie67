@@ -1,0 +1,103 @@
+/* Copyright (c) 2011 The comie67 Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license
+ * that can be found in the LICENSE.txt file.
+ */
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "dispex.idl";
+
+[
+	uuid(15045c3b-d7ab-45e0-8ef9-15bf98563053),
+	hidden
+]
+[v1_enum] enum {
+	COMIE67_LOG = DISPID_VALUE + 1,
+	COMIE67_DEBUG,
+	COMIE67_INFO,
+	COMIE67_WARN,
+	COMIE67_ERROR,
+	COMIE67_ASSERT,
+	COMIE67_CLEAR,
+	COMIE67_TRACE,
+	COMIE67_TIME,
+	COMIE67_TIMEEND,
+	COMIE67_PROFILE,
+	COMIE67_PROFILEEND,
+	COMIE67_COUNT,
+	COMIE67_ENDOFMETHODSLIST
+};
+[
+	object,
+	uuid(20AB98F7-2E2C-433C-98C4-A858190C9714),
+	dual,
+	nonextensible,
+	oleautomation,
+	pointer_default(unique)
+]
+interface IConsoleObject : IDispatchEx
+{
+	[id(COMIE67_LOG), vararg]		HRESULT log([in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_DEBUG), vararg]		HRESULT debug([in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_INFO), vararg]		HRESULT info([in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_WARN), vararg]		HRESULT warn([in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_ERROR), vararg]		HRESULT error([in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_ASSERT), vararg]	HRESULT assert([in] VARIANT_BOOL expr, [in] SAFEARRAY(VARIANT) varg);
+	[id(COMIE67_CLEAR)]				HRESULT clear(void);
+	[id(COMIE67_TRACE)]				HRESULT trace(void);
+	[id(COMIE67_TIME)]				HRESULT time([in] BSTR name);
+	[id(COMIE67_TIMEEND)]			HRESULT timeEnd([in] BSTR name);
+	[id(COMIE67_PROFILE)]			HRESULT profile([in] BSTR title);
+	[id(COMIE67_PROFILEEND)]		HRESULT profileEnd(void);
+	[id(COMIE67_COUNT)]				HRESULT count([in] BSTR title);
+};
+[
+	object,
+	uuid(93CCB8D4-4DAB-4D31-91C3-19E7E39B4E76),
+	pointer_default(unique)
+]
+interface IExplorerBar : IUnknown{
+};
+[
+	uuid(3803E745-F7C0-4F6F-BC81-578FE095A4E9),
+	version(1.0)
+]
+library comie67Lib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(163804ab-42b5-47aa-90c7-7e910e897d4c)
+	]
+	typedef [v1_enum] enum _PrintLevel {
+		LEVEL_NORMAL=0,
+		LEVEL_DEBUG,
+		LEVEL_INFO,
+		LEVEL_WARN,
+		LEVEL_ERROR
+	} PrintLevel;
+	[
+		uuid(77C4A043-1F8B-423C-9E0F-E07AA36B08E7)
+	]
+	dispinterface _IConsoleObjectEvents
+	{
+		properties:
+		methods:
+		[id(1)] void PrintEvent(PrintLevel level, [in] BSTR str);
+		[id(2)] void ClearEvent(void);
+	};
+	[
+		uuid(653823FB-32DD-4863-B8D8-4579A667400A)
+	]
+	coclass ConsoleObject
+	{
+		[default] interface IConsoleObject;
+		[default, source] dispinterface _IConsoleObjectEvents;
+	};
+	[
+		uuid(59098C21-A36C-4758-8F7D-B6EE4E9B6562)
+	]
+	coclass ExplorerBar
+	{
+		[default] interface IExplorerBar;
+	};
+};

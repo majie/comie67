@@ -1,0 +1,39 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {59098C21-A36C-4758-8F7D-B6EE4E9B6562} = s 'comie67 output window'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{3803E745-F7C0-4F6F-BC81-578FE095A4E9}'
+			'Implemented Categories'
+			{
+				'{00021494-0000-0000-C000-000000000046}'
+			}
+		}
+	}
+}
+
+HKLM
+{
+	SOFTWARE
+	{
+		Microsoft
+		{
+			NoRemove 'Internet Explorer'
+			{
+				NoRemove 'Explorer Bars'
+				{
+					ForceRemove '{59098C21-A36C-4758-8F7D-B6EE4E9B6562}'
+					{
+						val BarSize = b '2301000000000000'
+					}
+				}
+			}
+		}
+	}
+}
