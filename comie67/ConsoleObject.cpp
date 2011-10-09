@@ -114,6 +114,10 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 
 	HRESULT hr;
 
+	/*
+	 * Get IDispatchEx of the global script object
+	 */
+
 	CComQIPtr<IWebBrowser2> webBrowser2 = dispatch;
 	if (!webBrowser2) return;
 
@@ -140,7 +144,35 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 		return;
 	}
 
-	_bstr_t console67Name(_T("console67"));
+	/* Got the script IDispatchEx
+	 * ================================
+	 * Determine IE version.
+	 * Use console67 to avoid name collision with the Developer Tools of IE8.
+	 */
+
+	CRegKey regKey;
+	long versionNumber = 0xffffffff; // fail safe
+	LONG regError;
+
+	regError = regKey.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Internet Explorer"), KEY_READ);
+	if (regError == ERROR_SUCCESS) {
+		TCHAR versionString[128];
+		ULONG size = sizeof(versionString);
+
+		regError = regKey.QueryStringValue(_T("Version"), versionString, &size);
+		if (regError == ERROR_SUCCESS) {
+			versionString[size - 1] = _T('\0');
+
+			TCHAR* dot = NULL;
+			versionNumber = _tcstol(versionString, &dot, 10);
+		}
+	}
+
+	_bstr_t console67Name(_T("console"));
+	if (regError != ERROR_SUCCESS || versionNumber >= 8) {
+		console67Name += _T("67");
+	}
+
 	DISPID console67Dispid;
 	hr = scriptDispEx->GetDispID(console67Name, fdexNameEnsure | fdexNameCaseSensitive, &console67Dispid);
 	if (FAILED(hr)) {
