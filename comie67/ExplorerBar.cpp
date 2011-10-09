@@ -7,6 +7,8 @@
 
 #include "ExplorerBar.h"
 
+#include <new>
+
 #include <oleidl.h>
 #include <comutil.h>
 
@@ -109,7 +111,11 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 		sibling.Detach();
 		bar.Detach();
 
-		CConsoleWindow* window = new CConsoleWindow();
+		CConsoleWindow* window = new(std::nothrow) CConsoleWindow();
+		if (window == NULL) {
+			return E_OUTOFMEMORY;
+		}
+
 		m_hWndDlg = window->Create(parentWnd, 0);
 		if (m_hWndDlg == NULL) {
 			Log(LOG_ERROR, _T("window->Create(); failed\n"));
