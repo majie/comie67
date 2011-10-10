@@ -57,8 +57,10 @@ BEGIN_PROP_MAP(CExplorerBar)
 END_PROP_MAP()
 
 BEGIN_SINK_MAP(CExplorerBar)
-	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents, 1, OnPrintEvent, &kPrintEventInfo)
-	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents, 2, OnClearEvent, &kClearEventInfo)
+	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents,
+		COMIE67_PRINT_EVENT_ID, OnPrintEvent, &kPrintEventInfo)
+	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents,
+		COMIE67_CLEAR_EVENT_ID, OnClearEvent, &kClearEventInfo)
 END_SINK_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()

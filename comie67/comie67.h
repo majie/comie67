@@ -5,7 +5,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Mon Oct 10 00:04:49 2011
+/* at Mon Oct 10 21:44:57 2011
  */
 /* Compiler settings for comie67.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -668,6 +668,11 @@ enum _PrintLevel
 	LEVEL_ERROR	= LEVEL_WARN + 1
     } 	PrintLevel;
 
+/* [v1_enum][uuid] */ 
+enum  DECLSPEC_UUID("39F22B65-C3B4-4a31-93CC-B43A244388E4") __MIDL___MIDL_itf_comie67_0262_0001
+    {	COMIE67_PRINT_EVENT_ID	= 1,
+	COMIE67_CLEAR_EVENT_ID	= COMIE67_PRINT_EVENT_ID + 1
+    } ;
 
 EXTERN_C const IID LIBID_comie67Lib;
 

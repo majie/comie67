@@ -76,14 +76,21 @@ library comie67Lib
 		LEVEL_ERROR
 	} PrintLevel;
 	[
+		uuid(39F22B65-C3B4-4a31-93CC-B43A244388E4)
+	]
+	[v1_enum] enum {
+		COMIE67_PRINT_EVENT_ID = 1,
+		COMIE67_CLEAR_EVENT_ID
+	};
+	[
 		uuid(77C4A043-1F8B-423C-9E0F-E07AA36B08E7)
 	]
 	dispinterface _IConsoleObjectEvents
 	{
 		properties:
 		methods:
-		[id(1)] void PrintEvent(PrintLevel level, [in] BSTR str);
-		[id(2)] void ClearEvent(void);
+		[id(COMIE67_PRINT_EVENT_ID)] void PrintEvent(PrintLevel level, [in] BSTR str);
+		[id(COMIE67_CLEAR_EVENT_ID)] void ClearEvent(void);
 	};
 	[
 		uuid(653823FB-32DD-4863-B8D8-4579A667400A)
