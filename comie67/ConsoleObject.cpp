@@ -224,15 +224,14 @@ STDMETHODIMP CConsoleObject::log(SAFEARRAY* varg)
 
 	HRESULT hr;
 
-	BSTR bstr;
-	hr = BstrPrintf(&bstr, *varg);
+	_bstr_t bstr;
+	hr = BstrPrintf(bstr.GetAddress(), *varg);
 	if (FAILED(hr))
 		return hr;
 
 	Fire_PrintEvent(LEVEL_NORMAL, bstr);
 	Log(LOG_MOREFUNC, _T("CConsoleObject::log() \"%s\"\n"), static_cast<TCHAR*>(bstr));
 
-	::SysFreeString(bstr);
 	return S_OK;
 }
 
