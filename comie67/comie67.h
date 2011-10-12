@@ -5,7 +5,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Mon Oct 10 21:44:57 2011
+/* at Wed Oct 12 20:39:56 2011
  */
 /* Compiler settings for comie67.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

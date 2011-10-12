@@ -35,20 +35,6 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 
 		AddRef();
 
-		CComQIPtr<IOleWindow> ieWindow = m_spUnkSite;
-		if (!ieWindow) {
-			Log(LOG_ERROR, _T("QI IOleWindow failed\n"));
-			return E_NOINTERFACE;
-		}
-
-		HWND parentWnd;
-		hr = ieWindow->GetWindow(&parentWnd);
-		if (FAILED(hr)) {
-			Log(LOG_ERROR, _T("IOleWindow::GetWindow() failed\n"));
-			return hr;
-		}
-		Log(LOG_MOREFUNC, _T("parent window: 0x%X\n"), parentWnd);
-
 		CComPtr<IRunningObjectTable> rot;
 		hr = ::GetRunningObjectTable(0, &rot);
 		if (FAILED(hr)) {
@@ -85,9 +71,23 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 			return hr;
 		}
 
+		CComQIPtr<IOleWindow> ieWindow = m_spUnkSite;
+		if (!ieWindow) {
+			Log(LOG_ERROR, _T("QI IOleWindow failed\n"));
+			return E_NOINTERFACE;
+		}
+
+		HWND barWnd;
+		hr = ieWindow->GetWindow(&barWnd);
+		if (FAILED(hr)) {
+			Log(LOG_ERROR, _T("IOleWindow::GetWindow() failed\n"));
+			return hr;
+		}
+		Log(LOG_MOREFUNC, _T("bar window: 0x%X\n"), barWnd);
+
 		RECT rc;
 		CWindow bar;
-		bar.Attach(parentWnd);
+		bar.Attach(barWnd);
 
 		if(!bar.GetClientRect(&rc)) {
 			Log(LOG_ERROR, _T("GetClientRect failed\n"));
@@ -116,7 +116,7 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 			return E_OUTOFMEMORY;
 		}
 
-		m_hWndDlg = window->Create(parentWnd, 0);
+		m_hWndDlg = window->Create(barWnd, 0);
 		if (m_hWndDlg == NULL) {
 			Log(LOG_ERROR, _T("window->Create(); failed\n"));
 			return HRESULT_FROM_WIN32(::GetLastError());
