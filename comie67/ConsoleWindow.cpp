@@ -40,7 +40,7 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 		parentOfStatic.ScreenToClient(&replace);
 		parentOfStatic.Detach();
 
-		staticCtrl.ShowWindow(SW_HIDE);
+		staticCtrl.DestroyWindow();
 
 		mRichEditCtrl.Create(RICHEDIT_CLASS, this, RICHEDIT_MSG_MAP_ID,
 			this->m_hWnd, replace, _T("Rich Edit Control"),
@@ -69,9 +69,8 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 
 		staticCtrl.SetWindowText(_T("riched20.dll load error"));
 		textArea.Attach(staticCtrl);
+		staticCtrl.Detach();
 	}
-
-	staticCtrl.Detach();
 	
 	textArea.MoveWindow(&clientRect);
 	textArea.Detach();
