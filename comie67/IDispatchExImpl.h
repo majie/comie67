@@ -47,7 +47,7 @@ public:
 protected:
 	/*
 	 * Call InitTypeInfo() before calling other methods of IDispatchExImpl, otherwise methods
-	 * defined in typelib won't be add to the entry maps and can't be called by the scripts.
+	 * defined in typelib won't be added to the entry maps and can't be called by the scripts.
 	 *
 	 * BOOL all = TRUE if you want all methods defined in the typelib to be added to the maps.
 	 * if all = FALSE, only methods listed in kInternalMethods will be added to the maps.
