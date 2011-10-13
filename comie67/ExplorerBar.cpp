@@ -88,6 +88,7 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 		RECT rc;
 		CWindow bar;
 		bar.Attach(barWnd);
+		bar.SetWindowText(_T("comie67.ExplorerBar"));
 
 		if(!bar.GetClientRect(&rc)) {
 			Log(LOG_ERROR, _T("GetClientRect failed\n"));

@@ -15,6 +15,8 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 {
 	Log(LOG_FUNC, _T("CConsoleWindow::OnInitDialog()\n"));
 
+	SetWindowText(_T("comie67.ConsoleWindow"));
+
 	RECT clientRect;
 	GetParent().GetClientRect(&clientRect);
 	MoveWindow(&clientRect);
