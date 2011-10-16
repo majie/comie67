@@ -41,7 +41,7 @@ class ATL_NO_VTABLE CConsoleObject :
 {
 public:
 	CConsoleObject() {}
-	~CConsoleObject() {}
+	virtual ~CConsoleObject() {}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_CONSOLEOBJECT)
 

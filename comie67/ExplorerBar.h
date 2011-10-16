@@ -33,6 +33,7 @@ public:
 	CExplorerBar() : m_bRequiresSave(FALSE), m_hWndDlg(NULL)
 	{
 	}
+	virtual ~CExplorerBar() {}
 
 	// IPersistStreamInitImpl
 	BOOL m_bRequiresSave;

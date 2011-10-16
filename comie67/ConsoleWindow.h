@@ -22,7 +22,7 @@ public:
 	enum {IDD = IDD_CONSOLEWINDOW};
 
 	CConsoleWindow() : mRichEditDll(NULL), mInitError(ERROR_SUCCESS) {}
-	~CConsoleWindow() {}
+	virtual ~CConsoleWindow() {}
 
 BEGIN_MSG_MAP(CConsoleWindow)
 	MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
