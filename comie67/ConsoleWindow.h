@@ -22,11 +22,12 @@ public:
 	enum {IDD = IDD_CONSOLEWINDOW};
 
 	CConsoleWindow() : mRichEditDll(NULL), mInitError(ERROR_SUCCESS) {}
-	~CConsoleWindow() {::FreeLibrary(mRichEditDll);}
+	~CConsoleWindow() {}
 
 BEGIN_MSG_MAP(CConsoleWindow)
 	MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 	MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+	MESSAGE_HANDLER(WM_SIZE, OnSize)
 ALT_MSG_MAP(RICHEDIT_MSG_MAP_ID)
 END_MSG_MAP()
 
@@ -45,6 +46,7 @@ private:
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	HMODULE mRichEditDll;
 	CContainedWindow mRichEditCtrl;

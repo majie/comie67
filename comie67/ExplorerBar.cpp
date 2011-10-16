@@ -85,31 +85,9 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 		}
 		Log(LOG_MOREFUNC, _T("bar window: 0x%X\n"), barWnd);
 
-		RECT rc;
 		CWindow bar;
 		bar.Attach(barWnd);
 		bar.SetWindowText(_T("comie67.ExplorerBar"));
-
-		if(!bar.GetClientRect(&rc)) {
-			Log(LOG_ERROR, _T("GetClientRect failed\n"));
-			return HRESULT_FROM_WIN32(::GetLastError());
-		}
-
-		DUMP_RECT(&rc);
-		bar.ClientToScreen(&rc);
-		DUMP_RECT(&rc);
-
-		POINT point = {0, 0};
-		HWND siblingWnd = bar.ChildWindowFromPoint(point);
-		Log(LOG_MOREFUNC, _T("sibling window: 0x%X\n"), siblingWnd);
-		RECT siblingRect;
-		CWindow sibling;
-		sibling.Attach(siblingWnd);
-		sibling.GetClientRect(&siblingRect);
-		DUMP_RECT(&siblingRect);
-		bar.ClientToScreen(&siblingRect);
-		DUMP_RECT(&siblingRect);
-		sibling.Detach();
 		bar.Detach();
 
 		CConsoleWindow* window = new(std::nothrow) CConsoleWindow();

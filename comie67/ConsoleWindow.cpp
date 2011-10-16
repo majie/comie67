@@ -17,10 +17,6 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 
 	SetWindowText(_T("comie67.ConsoleWindow"));
 
-	RECT clientRect;
-	GetParent().GetClientRect(&clientRect);
-	MoveWindow(&clientRect);
-
 	mRichEditDll = ::LoadLibrary(_T("riched20.dll"));
 	if (mRichEditDll == NULL) {
 		Log(LOG_ERROR, _T("LoadLibrary rich edit failed\n"));
@@ -74,7 +70,6 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 		staticCtrl.Detach();
 	}
 	
-	textArea.MoveWindow(&clientRect);
 	textArea.Detach();
 
 	return 1;
@@ -84,5 +79,16 @@ LRESULT CConsoleWindow::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 {
 	Log(LOG_FUNC, _T("CConsoleWindow::OnDestroy()\n"));
 
+	::FreeLibrary(mRichEditDll);
+
+	return 0;
+}
+
+LRESULT CConsoleWindow::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	Log(LOG_FUNC, _T("OnSize: type: %d, width: %d, height: %d\n"), wParam, LOWORD(lParam), HIWORD(lParam));
+
+	RECT rect = {0, 0, LOWORD(lParam), HIWORD(lParam)};
+	if (mRichEditCtrl.IsWindow())
+		mRichEditCtrl.MoveWindow(&rect, TRUE);
 	return 0;
 }
