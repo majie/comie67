@@ -73,6 +73,7 @@ END
 IDR_COMIE67             REGISTRY                "comie67.rgs"
 IDR_CONSOLEOBJECT       REGISTRY                "ConsoleObject.rgs"
 IDR_EXPLORERBAR         REGISTRY                "ExplorerBar.rgs"
+IDR_CONSOLEWINDOW       REGISTRY                "ConsoleWindow.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

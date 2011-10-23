@@ -11,7 +11,8 @@
 #define IDR_COMIE67                     101
 #define IDR_CONSOLEOBJECT               102
 #define IDR_EXPLORERBAR                 103
-#define IDD_CONSOLEWINDOW               104
+#define IDR_CONSOLEWINDOW               104
+#define IDD_CONSOLEWINDOW               105
 #define IDC_STATIC1                     205
 
 // Next default values for new objects

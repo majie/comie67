@@ -27,6 +27,8 @@ import "dispex.idl";
 	COMIE67_COUNT,
 	COMIE67_ENDOFMETHODSLIST
 };
+
+
 [
 	object,
 	uuid(20AB98F7-2E2C-433C-98C4-A858190C9714),
@@ -51,13 +53,31 @@ interface IConsoleObject : IDispatchEx
 	[id(COMIE67_PROFILEEND)]		HRESULT profileEnd(void);
 	[id(COMIE67_COUNT)]				HRESULT count([in] BSTR title);
 };
+
+
 [
 	object,
 	uuid(93CCB8D4-4DAB-4D31-91C3-19E7E39B4E76),
 	pointer_default(unique)
 ]
-interface IExplorerBar : IUnknown{
+interface IExplorerBar : IUnknown
+{
 };
+
+
+[
+	object,
+	uuid(2B263628-94B5-4513-BFCA-EE6A2CD86D1E),
+	pointer_default(unique)
+]
+interface IConsoleWindow : IUnknown
+{
+
+	[] HRESULT Create(HWND parent, LPARAM initParam, [out] HWND* newWnd);
+	[] HRESULT ShowWindow(int cmdShow);
+};
+
+
 [
 	uuid(3803E745-F7C0-4F6F-BC81-578FE095A4E9),
 	version(1.0)
@@ -65,6 +85,7 @@ interface IExplorerBar : IUnknown{
 library comie67Lib
 {
 	importlib("stdole2.tlb");
+
 	[
 		uuid(163804ab-42b5-47aa-90c7-7e910e897d4c)
 	]
@@ -75,6 +96,8 @@ library comie67Lib
 		LEVEL_WARN,
 		LEVEL_ERROR
 	} PrintLevel;
+
+
 	[
 		uuid(39F22B65-C3B4-4a31-93CC-B43A244388E4)
 	]
@@ -82,6 +105,8 @@ library comie67Lib
 		COMIE67_PRINT_EVENT_ID = 1,
 		COMIE67_CLEAR_EVENT_ID
 	};
+
+
 	[
 		uuid(77C4A043-1F8B-423C-9E0F-E07AA36B08E7)
 	]
@@ -92,6 +117,8 @@ library comie67Lib
 		[id(COMIE67_PRINT_EVENT_ID)] void PrintEvent(PrintLevel level, [in] BSTR str);
 		[id(COMIE67_CLEAR_EVENT_ID)] void ClearEvent(void);
 	};
+
+
 	[
 		uuid(653823FB-32DD-4863-B8D8-4579A667400A)
 	]
@@ -100,11 +127,22 @@ library comie67Lib
 		[default] interface IConsoleObject;
 		[default, source] dispinterface _IConsoleObjectEvents;
 	};
+
+
 	[
 		uuid(59098C21-A36C-4758-8F7D-B6EE4E9B6562)
 	]
 	coclass ExplorerBar
 	{
 		[default] interface IExplorerBar;
+	};
+
+
+	[
+		uuid(A167BC8B-DEBF-4EC5-A317-90590873C371)
+	]
+	coclass ConsoleWindow
+	{
+		[default] interface IConsoleWindow;
 	};
 };

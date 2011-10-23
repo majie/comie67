@@ -5,7 +5,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Sun Oct 16 18:56:59 2011
+/* at Sun Oct 23 00:24:39 2011
  */
 /* Compiler settings for comie67.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -56,6 +56,12 @@ typedef interface IExplorerBar IExplorerBar;
 #endif 	/* __IExplorerBar_FWD_DEFINED__ */
 
 
+#ifndef __IConsoleWindow_FWD_DEFINED__
+#define __IConsoleWindow_FWD_DEFINED__
+typedef interface IConsoleWindow IConsoleWindow;
+#endif 	/* __IConsoleWindow_FWD_DEFINED__ */
+
+
 #ifndef ___IConsoleObjectEvents_FWD_DEFINED__
 #define ___IConsoleObjectEvents_FWD_DEFINED__
 typedef interface _IConsoleObjectEvents _IConsoleObjectEvents;
@@ -84,6 +90,18 @@ typedef struct ExplorerBar ExplorerBar;
 #endif /* __cplusplus */
 
 #endif 	/* __ExplorerBar_FWD_DEFINED__ */
+
+
+#ifndef __ConsoleWindow_FWD_DEFINED__
+#define __ConsoleWindow_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class ConsoleWindow ConsoleWindow;
+#else
+typedef struct ConsoleWindow ConsoleWindow;
+#endif /* __cplusplus */
+
+#endif 	/* __ConsoleWindow_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -652,6 +670,124 @@ EXTERN_C const IID IID_IExplorerBar;
 #endif 	/* __IExplorerBar_INTERFACE_DEFINED__ */
 
 
+#ifndef __IConsoleWindow_INTERFACE_DEFINED__
+#define __IConsoleWindow_INTERFACE_DEFINED__
+
+/* interface IConsoleWindow */
+/* [unique][uuid][object] */ 
+
+
+EXTERN_C const IID IID_IConsoleWindow;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("2B263628-94B5-4513-BFCA-EE6A2CD86D1E")
+    IConsoleWindow : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Create( 
+            HWND parent,
+            LPARAM initParam,
+            /* [out] */ HWND *newWnd) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE ShowWindow( 
+            int cmdShow) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IConsoleWindowVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IConsoleWindow * This,
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IConsoleWindow * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IConsoleWindow * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *Create )( 
+            IConsoleWindow * This,
+            HWND parent,
+            LPARAM initParam,
+            /* [out] */ HWND *newWnd);
+        
+        HRESULT ( STDMETHODCALLTYPE *ShowWindow )( 
+            IConsoleWindow * This,
+            int cmdShow);
+        
+        END_INTERFACE
+    } IConsoleWindowVtbl;
+
+    interface IConsoleWindow
+    {
+        CONST_VTBL struct IConsoleWindowVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IConsoleWindow_QueryInterface(This,riid,ppvObject)	\
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+
+#define IConsoleWindow_AddRef(This)	\
+    (This)->lpVtbl -> AddRef(This)
+
+#define IConsoleWindow_Release(This)	\
+    (This)->lpVtbl -> Release(This)
+
+
+#define IConsoleWindow_Create(This,parent,initParam,newWnd)	\
+    (This)->lpVtbl -> Create(This,parent,initParam,newWnd)
+
+#define IConsoleWindow_ShowWindow(This,cmdShow)	\
+    (This)->lpVtbl -> ShowWindow(This,cmdShow)
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+HRESULT STDMETHODCALLTYPE IConsoleWindow_Create_Proxy( 
+    IConsoleWindow * This,
+    HWND parent,
+    LPARAM initParam,
+    /* [out] */ HWND *newWnd);
+
+
+void __RPC_STUB IConsoleWindow_Create_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+HRESULT STDMETHODCALLTYPE IConsoleWindow_ShowWindow_Proxy( 
+    IConsoleWindow * This,
+    int cmdShow);
+
+
+void __RPC_STUB IConsoleWindow_ShowWindow_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+
+#endif 	/* __IConsoleWindow_INTERFACE_DEFINED__ */
+
+
 
 #ifndef __comie67Lib_LIBRARY_DEFINED__
 #define __comie67Lib_LIBRARY_DEFINED__
@@ -669,7 +805,7 @@ enum _PrintLevel
     } 	PrintLevel;
 
 /* [v1_enum][uuid] */ 
-enum  DECLSPEC_UUID("39F22B65-C3B4-4a31-93CC-B43A244388E4") __MIDL___MIDL_itf_comie67_0262_0001
+enum  DECLSPEC_UUID("39F22B65-C3B4-4a31-93CC-B43A244388E4") __MIDL___MIDL_itf_comie67_0263_0001
     {	COMIE67_PRINT_EVENT_ID	= 1,
 	COMIE67_CLEAR_EVENT_ID	= COMIE67_PRINT_EVENT_ID + 1
     } ;
@@ -797,6 +933,14 @@ EXTERN_C const CLSID CLSID_ExplorerBar;
 class DECLSPEC_UUID("59098C21-A36C-4758-8F7D-B6EE4E9B6562")
 ExplorerBar;
 #endif
+
+EXTERN_C const CLSID CLSID_ConsoleWindow;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("A167BC8B-DEBF-4EC5-A317-90590873C371")
+ConsoleWindow;
+#endif
 #endif /* __comie67Lib_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */
@@ -805,6 +949,11 @@ unsigned long             __RPC_USER  BSTR_UserSize(     unsigned long *, unsign
 unsigned char * __RPC_USER  BSTR_UserMarshal(  unsigned long *, unsigned char *, BSTR * ); 
 unsigned char * __RPC_USER  BSTR_UserUnmarshal(unsigned long *, unsigned char *, BSTR * ); 
 void                      __RPC_USER  BSTR_UserFree(     unsigned long *, BSTR * ); 
+
+unsigned long             __RPC_USER  HWND_UserSize(     unsigned long *, unsigned long            , HWND * ); 
+unsigned char * __RPC_USER  HWND_UserMarshal(  unsigned long *, unsigned char *, HWND * ); 
+unsigned char * __RPC_USER  HWND_UserUnmarshal(unsigned long *, unsigned char *, HWND * ); 
+void                      __RPC_USER  HWND_UserFree(     unsigned long *, HWND * ); 
 
 unsigned long             __RPC_USER  LPSAFEARRAY_UserSize(     unsigned long *, unsigned long            , LPSAFEARRAY * ); 
 unsigned char * __RPC_USER  LPSAFEARRAY_UserMarshal(  unsigned long *, unsigned char *, LPSAFEARRAY * ); 

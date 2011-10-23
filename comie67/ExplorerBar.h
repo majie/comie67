@@ -12,8 +12,6 @@
 #include "comie67.h"
 #include "IDeskBandImpl.h"
 
-static enum {EVENT_SOURCE_ID = 1};
-
 /*
  * CExplorerBar registers itself as a horizontal explorer bar. It provides a space
  * for a child window (e.g. CConsoleWindow) to fill up.
@@ -26,7 +24,6 @@ class ATL_NO_VTABLE CExplorerBar :
 	public IObjectWithSiteImpl<CExplorerBar>,
 	public IPersistStreamInitImpl<CExplorerBar>,
 	public IDeskBandImpl<CExplorerBar>,
-	public IDispEventSimpleImpl<EVENT_SOURCE_ID, CExplorerBar, &DIID__IConsoleObjectEvents>,
 	public IExplorerBar
 {
 public:
@@ -57,15 +54,7 @@ END_COM_MAP()
 BEGIN_PROP_MAP(CExplorerBar)
 END_PROP_MAP()
 
-BEGIN_SINK_MAP(CExplorerBar)
-	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents,
-		COMIE67_PRINT_EVENT_ID, OnPrintEvent, &kPrintEventInfo)
-	SINK_ENTRY_INFO(EVENT_SOURCE_ID, DIID__IConsoleObjectEvents,
-		COMIE67_CLEAR_EVENT_ID, OnClearEvent, &kClearEventInfo)
-END_SINK_MAP()
-
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
-
 	HRESULT FinalConstruct(){return S_OK;}
 	void FinalRelease(){}
 
@@ -75,14 +64,6 @@ END_SINK_MAP()
 private:
 	CExplorerBar(const CExplorerBar&);
 	CExplorerBar& operator=(const CExplorerBar&);
-
-	static _ATL_FUNC_INFO kPrintEventInfo;
-	static _ATL_FUNC_INFO kClearEventInfo;
-
-	STDMETHOD_(void, OnPrintEvent)(PrintLevel level, BSTR str);
-	STDMETHOD_(void, OnClearEvent)(void){mRichEdit.SetWindowText(_T(""));}
-
-	CWindow mRichEdit;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ExplorerBar), CExplorerBar)

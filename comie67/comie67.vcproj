@@ -240,6 +240,9 @@
 				RelativePath="ConsoleObject.rgs">
 			</File>
 			<File
+				RelativePath="ConsoleWindow.rgs">
+			</File>
+			<File
 				RelativePath="ExplorerBar.rgs">
 			</File>
 			<File

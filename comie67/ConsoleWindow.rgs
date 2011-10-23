@@ -1,0 +1,15 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {A167BC8B-DEBF-4EC5-A317-90590873C371} = s 'ConsoleWindow Class'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{3803E745-F7C0-4F6F-BC81-578FE095A4E9}'
+		}
+	}
+}
