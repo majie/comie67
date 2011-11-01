@@ -173,9 +173,9 @@ LRESULT CConsoleWindow::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 
 STDMETHODIMP_(void) CConsoleWindow::OnPrintEvent(PrintLevel level, BSTR str)
 {
-	Log(LOG_FUNC, _T("CConsoleWindow::OnPrintEvent\n"));
+	Log(LOG_FUNC, _T("CConsoleWindow::OnPrintEvent()\n"));
 
-	_bstr_t bstr;
+	_bstr_t mark;
 
 	// TODO: use small icons.
 	switch(level) {
@@ -184,22 +184,22 @@ STDMETHODIMP_(void) CConsoleWindow::OnPrintEvent(PrintLevel level, BSTR str)
 		case LEVEL_DEBUG:
 			break;
 		case LEVEL_INFO:
-			bstr = _T("[i]");
+			mark = _T("[i]");
 			break;
 		case LEVEL_WARN:
-			bstr = _T("[!]");
+			mark = _T("[!]");
 			break;
 		case LEVEL_ERROR:
-			bstr = _T("[X]");
+			mark = _T("[X]");
 			break;
 		default:
 			break;
 	}
 
-	bstr += str;
-	bstr += _T("\n");
+	_bstr_t bstr = mark + str + _T("\n");
 
 	// append text
 	::SendMessage(mRichEditCtrl, EM_SETSEL, -1, -1);
-	::SendMessage(mRichEditCtrl, EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(static_cast<LPCTSTR>(bstr)));
+	::SendMessage(mRichEditCtrl, EM_REPLACESEL, FALSE,
+		reinterpret_cast<LPARAM>(static_cast<LPCTSTR>(bstr)));
 }

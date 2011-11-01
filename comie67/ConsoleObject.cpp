@@ -249,9 +249,14 @@ STDMETHODIMP CConsoleObject::info(SAFEARRAY* varg)
 {
 	Log(LOG_FUNC, _T("CConsoleObject::info()\n"));
 	
-	_bstr_t str(L"");
+	HRESULT hr;
+	_bstr_t bstr;
 
-	Fire_PrintEvent(LEVEL_INFO, str);
+	hr = BstrPrintf(bstr.GetAddress(), *varg);
+	if (FAILED(hr))
+		return hr;
+
+	Fire_PrintEvent(LEVEL_INFO, bstr);
 	return S_OK;
 }
 
@@ -259,9 +264,14 @@ STDMETHODIMP CConsoleObject::warn(SAFEARRAY* varg)
 {
 	Log(LOG_FUNC, _T("CConsoleObject::warn()\n"));
 	
-	_bstr_t str(L"");
+	HRESULT hr;
+	_bstr_t bstr;
 
-	Fire_PrintEvent(LEVEL_WARN, str);
+	hr = BstrPrintf(bstr.GetAddress(), *varg);
+	if (FAILED(hr))
+		return hr;
+
+	Fire_PrintEvent(LEVEL_WARN, bstr);
 	return S_OK;
 }
 
@@ -269,9 +279,14 @@ STDMETHODIMP CConsoleObject::error(SAFEARRAY* varg)
 {
 	Log(LOG_FUNC, _T("CConsoleObject::error()\n"));
 	
-	_bstr_t str(L"");
+	HRESULT hr;
+	_bstr_t bstr;
 
-	Fire_PrintEvent(LEVEL_ERROR, str);
+	hr = BstrPrintf(bstr.GetAddress(), *varg);
+	if (FAILED(hr))
+		return hr;
+
+	Fire_PrintEvent(LEVEL_ERROR, bstr);
 	return S_OK;
 }
 
