@@ -348,7 +348,7 @@ STDMETHODIMP IDispatchExImpl<T>::InitTypeInfo(BOOL all)
 
 	length = ::GetModuleFileName(_AtlBaseModule.GetModuleInstance(), filename, MAX_PATH);
 	if (length == 0)
-		return HRESULT_FROM_WIN32(::GetLastError());
+		return AtlHresultFromLastError();
 
 	ITypeLib* typeLib;
 

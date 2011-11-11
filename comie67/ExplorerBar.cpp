@@ -50,7 +50,7 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 		hr = consoleWindow->Create(barWnd, 0, &m_hWndDlg);
 		if (FAILED(hr)) {
 			Log(LOG_ERROR, _T("window->Create(); failed\n"));
-			return HRESULT_FROM_WIN32(::GetLastError());
+			return AtlHresultFromLastError();
 		}
 
 		consoleWindow->ShowWindow(SW_SHOW);
