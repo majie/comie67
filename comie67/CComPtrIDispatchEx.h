@@ -8,57 +8,134 @@
 #include <atlcomcli.h>
 #include <dispex.h>
 
-// TODO: mimic CComPtr<IDispatch> implementation
+/*
+ * CComPtr<IDispatchEx> mimics the implementation of CComPtr<IDispatch>.
+ * See atlcomcli.h for the implementation.
+ *
+ * Currently only case-sensitive names look up is supported.
+ *
+ * CComPtr<IDispatchEx> inherits CComPtr<IDispatch>, so all CComPtr<IDispatch>
+ * functions, like GetPropertyByName() and Invoke0() etc., can be called from
+ * CComPtr<IDispatehEx> instances.
+ */
 template <>
-class CComPtr<IDispatchEx> : public CComPtrBase<IDispatchEx>
+class CComPtr<IDispatchEx> : public CComPtr<IDispatch>
 {
 public:
-	CComPtr() throw()
-	{
-	}
-	CComPtr(IDispatchEx* lp) throw() :
-	CComPtrBase<IDispatchEx>(lp)
-	{
-	}
-	CComPtr(const CComPtr<IDispatchEx>& lp) throw() :
-	CComPtrBase<IDispatchEx>(lp.p)
-	{
-	}
-	IDispatchEx* operator=(IDispatchEx* lp) throw()
-	{
-		return static_cast<IDispatchEx*>(AtlComPtrAssign((IUnknown**)&p, lp));
-	}
-	IDispatchEx* operator=(const CComPtr<IDispatchEx>& lp) throw()
-	{
-		return static_cast<IDispatchEx*>(AtlComPtrAssign((IUnknown**)&p, lp.p));
-	}
-};
+	CComPtr() {}
+	virtual ~CComPtr() {}
 
-/*class CIDispatchExHelper {
-public:
-	explicit CIDispatchExHelper(IDispatchEx* disp) : mDisp(disp) {}
-	~CIDispatchExHelper() {}
+	_NoAddRefReleaseOnCComPtr<IDispatchEx>* operator->() const
+	{
+		ATLASSERT(p!=NULL);
+		return (_NoAddRefReleaseOnCComPtr<IDispatchEx>*)p;
+	}
 
-	HRESULT Get(BSTR name, long* num) const;
-	HRESULT Get(BSTR name, BSTR* str) const;
-	HRESULT Get(BSTR name, IDispatch** disp) const;
-	HRESULT Get(BSTR name, IDispatchEx** dispex) const;
-	HRESULT Get(BSTR name, VARIANT* variant) const;
+	/*
+	 * IDispatchEx specific helper functions
+	 *
+	 * For GetProperty and Invoke operations,
+	 * call corresponding CComPtr<IDispatch> functions.
+	 */
+	STDMETHOD(PutPropertyAlways)(DISPID dispId, VARIANT* variant);
+	STDMETHOD(PutPropertyAlways)(LPCOLESTR name, VARIANT* variant);
 
-	HRESULT Put(BSTR name, long num) const;
-	HRESULT Put(BSTR name, BSTR str) const;
-	HRESULT Put(BSTR name, IDispatch* disp) const;
-	HRESULT Put(BSTR name, VARIANT* variant) const;
+	STDMETHOD(HasProperty)(DISPID dispId, BOOL* has);
+	STDMETHOD(HasProperty)(LPCOLESTR name, BOOL* has);
 
-	HRESULT Call(BSTR name, long num, ...) const;
+	STDMETHOD(DeleteProperty)(DISPID dispId)
+	{
+		return static_cast<IDispatchEx*>(p)->DeleteMemberByDispID(dispId);
+	}
 
-	bool Has(BSTR name) const;
-	HRESULT Delete(BSTR name) const;
+	STDMETHOD(DeleteProperty)(LPCOLESTR name)
+	{
+		_bstr_t bstr_name(name);
+		return static_cast<IDispatchEx*>(p)->DeleteMemberByName(bstr_name,
+			fdexNameCaseSensitive);
+	}
 
 private:
-	CIDispatchExHelper();
-	CIDispatchExHelper(const CIDispatchExHelper&);
-	CIDispatchExHelper& operator=(const CIDispatchExHelper&);
+	CComPtr(const CComPtr&);
+	CComPtr& operator=(const CComPtr&);
+};
 
-	CComPtr<IDispatchEx> mDisp;
-};*/
+STDMETHODIMP CComPtr<IDispatchEx>::PutPropertyAlways(DISPID dispId, VARIANT* variant)
+{
+	DISPID dispIdPut = DISPID_PROPERTYPUT;
+
+	DISPPARAMS params;
+	params.cArgs = 1;
+	params.rgvarg = variant;
+	params.cNamedArgs = 1;
+	params.rgdispidNamedArgs = &dispIdPut;
+
+	EXCEPINFO ei;
+
+	HRESULT hr = static_cast<IDispatchEx*>(p)->InvokeEx(dispId,
+		LOCALE_USER_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, &ei, NULL);
+	if (FAILED(hr))	return hr;
+
+	return S_OK;
+}
+
+STDMETHODIMP CComPtr<IDispatchEx>::PutPropertyAlways(LPCOLESTR name, VARIANT* variant)
+{
+	if (variant == NULL)
+		return E_POINTER;
+
+	_bstr_t bstr_name(name);
+	DISPID dispId;
+	HRESULT hr = static_cast<IDispatchEx*>(p)->GetDispID(bstr_name,
+		fdexNameEnsure | fdexNameCaseSensitive, &dispId);
+	if (FAILED(hr)) return hr;
+
+	return PutPropertyAlways(dispId, variant);
+}
+
+STDMETHODIMP CComPtr<IDispatchEx>::HasProperty(DISPID dispId, BOOL* has)
+{
+	if (has == NULL) {
+		return E_POINTER;
+	}
+
+	_bstr_t dummy;
+	HRESULT hr = static_cast<IDispatchEx*>(p)->GetMemberName(dispId,
+		dummy.GetAddress());
+	switch (hr) {
+		case S_OK:
+			*has = TRUE;
+			break;
+		case DISP_E_UNKNOWNNAME:
+			*has = FALSE;
+			break;
+		default:
+			return hr;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CComPtr<IDispatchEx>::HasProperty(LPCOLESTR name, BOOL* has)
+{
+	if (has == NULL) {
+		return E_POINTER;
+	}
+
+	_bstr_t bstr_name(name);
+	DISPID dispId;
+	HRESULT hr = static_cast<IDispatchEx*>(p)->GetDispID(bstr_name,
+		fdexNameCaseSensitive, &dispId);
+	switch (hr) {
+		case S_OK:
+			*has = TRUE;
+			break;
+		case DISP_E_UNKNOWNNAME:
+			*has = FALSE;
+			break;
+		default:
+			return hr;
+	}
+
+	return S_OK;
+}

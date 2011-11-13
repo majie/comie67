@@ -115,7 +115,7 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 	HRESULT hr;
 
 	/*
-	 * Get IDispatchEx of the global script object
+	 * Get the IDispatchEx of the global script object
 	 */
 
 	CComQIPtr<IWebBrowser2> webBrowser2 = dispatch;
@@ -144,8 +144,7 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 		return;
 	}
 
-	/* Got the script IDispatchEx
-	 * ================================
+	/*
 	 * Determine IE version.
 	 * Use console67 to avoid name collision with the Developer Tools of IE8.
 	 */
@@ -173,26 +172,10 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 		console67Name += _T("67");
 	}
 
-	DISPID console67Dispid;
-	hr = scriptDispEx->GetDispID(console67Name, fdexNameEnsure | fdexNameCaseSensitive, &console67Dispid);
-	if (FAILED(hr)) {
-		Log(LOG_ERROR, _T("1Put(\"console67\") failed: 0x%x\n"), hr);
-		return;
-	}
-
 	_variant_t me(this, true);
-
-	DISPID dispIdPut = DISPID_PROPERTYPUT;
-
-	DISPPARAMS params;
-	params.cArgs = 1;
-	params.rgvarg = &me;
-	params.cNamedArgs = 1;
-	params.rgdispidNamedArgs = &dispIdPut;
-	hr = scriptDispEx->InvokeEx(console67Dispid, LOCALE_USER_DEFAULT,
-		DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
+	hr = scriptDispEx.PutPropertyAlways(static_cast<TCHAR*>(console67Name), &me);
 	if (FAILED(hr)) {
-		Log(LOG_ERROR, _T("2Put(\"console67\") failed: 0x%x\n"), hr);
+		Log(LOG_ERROR, _T("Put(\"console67\") failed: 0x%x\n"), hr);
 		return;
 	}
 
