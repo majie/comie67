@@ -173,7 +173,7 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 	}
 
 	_variant_t me(this, true);
-	hr = scriptDispEx.PutPropertyAlways(static_cast<TCHAR*>(console67Name), &me);
+	hr = scriptDispEx.PutPropertyAlways(console67Name, &me);
 	if (FAILED(hr)) {
 		Log(LOG_ERROR, _T("Put(\"console67\") failed: 0x%x\n"), hr);
 		return;
