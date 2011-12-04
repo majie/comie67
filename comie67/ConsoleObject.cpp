@@ -150,7 +150,7 @@ STDMETHODIMP_(void) CConsoleObject::OnNavigateComplete2(IDispatch* dispatch, VAR
 	 */
 
 	CRegKey regKey;
-	long versionNumber = 0xffffffff; // fail safe
+	long versionNumber = LONG_MAX; // fail safe
 	LONG regError;
 
 	regError = regKey.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Internet Explorer"), KEY_READ);
