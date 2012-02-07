@@ -54,7 +54,7 @@ protected:
 	 * if all = FALSE, only methods listed in kInternalMethods will be added to the maps.
 	 */
 	STDMETHOD(InitTypeInfo)(BOOL all = TRUE);
-	STDMETHOD(AddEntryToMaps)(DISPID id, BSTR name, bool internal, DWORD attr);
+	STDMETHOD(AddEntryToMaps)(DISPID& id, BSTR name, bool internal, DWORD attr);
 
 private:
 	IDispatchExImpl(const IDispatchExImpl&);
@@ -484,18 +484,18 @@ STDMETHODIMP IDispatchExImpl<T>::InitTypeInfo(BOOL all)
 }
 
 template <typename T>
-STDMETHODIMP IDispatchExImpl<T>::AddEntryToMaps(DISPID id, BSTR name, bool internal, DWORD attr)
+STDMETHODIMP IDispatchExImpl<T>::AddEntryToMaps(DISPID& id, BSTR name, bool internal, DWORD attr)
 {
 	Log(LOG_MOREFUNC, _T("IDispatchExImpl::AddEntryToMaps(0x%x, \"%s\", %d, 0x%x) called\n"),
 		id, name, internal, attr);
 
-	CDispatchExEntry* entry = new(std::nothrow) CDispatchExEntry(id, name, internal, attr);
-	if (entry == NULL)
-		return E_OUTOFMEMORY;
-
 	// take IDispatchEx internal methods into account. if mNextId already exists, jump to the next one
 	while (mIdToEntryMap.Lookup(id) != NULL)
 		id++;
+
+	CDispatchExEntry* entry = new(std::nothrow) CDispatchExEntry(id, name, internal, attr);
+	if (entry == NULL)
+		return E_OUTOFMEMORY;	
 
 	mIdToEntryMap.SetAt(id, entry);
 	
