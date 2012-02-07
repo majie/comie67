@@ -560,64 +560,6 @@ STDMETHODIMP IDispatchExImpl<T>::InvokeImpl(DISPID id, LCID lcid, WORD wFlags, D
 					entry->SetVariant(pdp->rgvarg[0]);
 				else if (attr & fdexPropCanPutRef)
 					entry->AttachVariant(pdp->rgvarg[0]);
-
-				if (entry->GetVariant().vt == VT_DISPATCH) {
-					IDispatch* pdisp = entry->GetVariant().pdispVal;
-					CComPtr<IDispatch> disp;
-					_variant_t var;
-					DISPID mydispid;
-					disp.Attach(pdisp);
-
-					Log(LOG_MOREFUNC, _T("idispatch: 0x%p\n"), pdisp);
-
-					HRESULT hr = disp.GetProperty(0, &var);
-					if (FAILED(hr) || var.vt != VT_BSTR)
-						Log(LOG_MOREFUNC, _T("error value: 0x%x\n"), hr);
-
-					Log(LOG_MOREFUNC, _T("value: %ld, %s\n"), 0, var.bstrVal);
-
-					hr = disp.GetPropertyByName(OLESTR("constructor"), &var);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error constructor: 0x%x\n"), hr);
-
-					hr = disp.GetIDOfName(OLESTR("constructor"), &mydispid);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error constructor: 0x%x\n"), hr);
-
-					Log(LOG_MOREFUNC, _T("constructor: %ld, 0x%p\n"), mydispid, var.pdispVal);
-					
-					hr = disp.GetPropertyByName(OLESTR("apply"), &var);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error apply: 0x%x\n"), hr);
-
-					hr = disp.GetIDOfName(OLESTR("apply"), &mydispid);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error apply: 0x%x\n"), hr);
-
-					Log(LOG_MOREFUNC, _T("apply: %ld, 0x%p\n"), mydispid, var.pdispVal);
-
-					hr = disp.GetPropertyByName(OLESTR("call"), &var);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error call: 0x%x\n"), hr);
-
-					hr = disp.GetIDOfName(OLESTR("call"), &mydispid);
-					if (FAILED(hr) || var.vt != VT_DISPATCH)
-						Log(LOG_MOREFUNC, _T("error call: 0x%x\n"), hr);
-
-					Log(LOG_MOREFUNC, _T("call: %ld, 0x%p\n"), mydispid, var.pdispVal);
-
-					hr = disp.GetPropertyByName(OLESTR("length"), &var);
-					if (FAILED(hr) || var.vt != VT_I4)
-						Log(LOG_MOREFUNC, _T("error length: 0x%x\n"), hr);
-
-					hr = disp.GetIDOfName(OLESTR("length"), &mydispid);
-					if (FAILED(hr) || var.vt != VT_I4)
-						Log(LOG_MOREFUNC, _T("error length: 0x%x\n"), hr);
-
-					Log(LOG_MOREFUNC, _T("length: %ld, %ld\n"), mydispid, var.lVal);
-
-					disp.Detach();
-				}
 			}
 			else
 				return DISP_E_PARAMNOTOPTIONAL;
