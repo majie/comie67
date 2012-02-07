@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <new>
 
 #include <dispex.h>
 
@@ -488,7 +489,7 @@ STDMETHODIMP IDispatchExImpl<T>::AddEntryToMaps(DISPID id, BSTR name, bool inter
 	Log(LOG_MOREFUNC, _T("IDispatchExImpl::AddEntryToMaps(0x%x, \"%s\", %d, 0x%x) called\n"),
 		id, name, internal, attr);
 
-	CDispatchExEntry* entry = new CDispatchExEntry(id, name, internal, attr);
+	CDispatchExEntry* entry = new(std::nothrow) CDispatchExEntry(id, name, internal, attr);
 	if (entry == NULL)
 		return E_OUTOFMEMORY;
 

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <new>
+
 #include <atlsafe.h>
 
 #include "logger.h"
@@ -59,7 +61,7 @@ do {																										\
 	Log(LOG_DUMP, _T("===Start dumping a SAFEARRAY: dims: %u, features: 0x%x\n, sizeof Element: %u\n"),	\
 		dim, (psa)->fFeatures, (psa)->cbElements);															\
 																											\
-	LONG* index = new LONG[dim];																			\
+	LONG* index = new(std::nothrow) LONG[dim];																\
 	if (index == NULL) {																					\
 		sfa.Detach();																						\
 		break;																								\
