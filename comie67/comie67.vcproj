@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="Memory_and_Exception_Trace"
+				AdditionalIncludeDirectories="&quot;$(IntDir)&quot;;Memory_and_Exception_Trace"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_MERGE_PROXYSTUB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -49,11 +49,12 @@
 				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
 				GenerateStublessProxies="TRUE"
-				TypeLibraryName="$(IntDir)/comie67.tlb"
-				HeaderFileName="comie67.h"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="comie67_i.c"
-				ProxyFileName="comie67_p.c"/>
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Performing registration"
@@ -84,6 +85,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="&quot;$(IntDir)&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_MERGE_PROXYSTUB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -113,11 +115,12 @@
 				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
 				GenerateStublessProxies="TRUE"
-				TypeLibraryName="$(IntDir)/comie67.tlb"
-				HeaderFileName="comie67.h"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="comie67_i.c"
-				ProxyFileName="comie67_p.c"/>
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Performing registration"
@@ -250,25 +253,6 @@
 			</File>
 			<File
 				RelativePath="comie67.rgs">
-			</File>
-		</Filter>
-		<Filter
-			Name="Generated Files"
-			SourceControlFiles="FALSE">
-			<File
-				RelativePath="comie67_i.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

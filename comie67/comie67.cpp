@@ -10,6 +10,8 @@
 
 #include "logger.h"
 
+#include "comie67_i.c"
+
 #ifdef _DEBUG
 //#include "Stackwalker.h"
 #endif
