@@ -243,6 +243,33 @@ STDMETHODIMP IDispatchExImpl<T>::DeleteMemberByName(BSTR name, DWORD flags)
 
 	CDispatchExEntry* entry = NULL;
 
+	/*
+	 * See comments in AddEntryToMaps() first.
+	 *
+	 * TBD:
+	 * When run in IE8, the following demo shows an empty dialog after deleting the variable
+	 * added to the case insensitive map. This means the variable doesn't exist in the global
+	 * namespace of vbscript. This is the behavior of MSFT's and this IDispatchEx implementation.
+	 *
+	 * But in this case I think Testvar( = 3) should be the substitute value for a result of
+	 * insensitive name search. Should I move Testvar to the case insensitive map?
+	 *
+	 */
+	/*
+	   <html><head><title>Demo</title></head><body>
+	   <script type="text/javascript">
+	   testVar = 2;
+	   Testvar = 3;
+	   testvar = 4;
+	   TESTVAR = 0;
+	   TestVar = 1;
+	   delete testVar;
+	   </script>
+	   <script type="text/vbscript">
+	   MsgBox TESTVAR
+	   </script>
+	   </body></html>
+	 */
 	if (flags & fdexNameCaseSensitive) {
 		if (!mNameToEntryMap.Lookup(name, entry))
 			return DISP_E_MEMBERNOTFOUND;
@@ -506,7 +533,32 @@ STDMETHODIMP IDispatchExImpl<T>::AddEntryToMaps(DISPID& id, BSTR name, bool inte
 	var.Detach();
 
 	mNameToEntryMap.SetAt(atlStr, entry);
-	mNameToEntryIMap.SetAt(atlStr, entry);
+
+	/*
+	    <html><head><title>Demo</title></head><body>
+		<script type="text/javascript">
+		var testVar = 2;
+		var Testvar = 3;
+		var testvar = 4;
+		var TESTVAR = 0;
+		var TestVar = 1;
+		</script>
+		<script type="text/vbscript">
+		MsgBox TESTVAR
+		MsgBox TeStVaR
+		</script>
+		</body></html>
+	 */
+	/*
+	 * Running the demo above in IE8 gets an result of two dialogs, each of which shows a '2'.
+	 * So one of MSFT's IDispatchEx implementation always preserves the first variable name added
+	 * to the case insensitive search map. Subsequence additions are ignored.
+	 * (Note that jscript is case sensitive while vbscript is case insensitive.)
+	 *
+	 */
+	if (mNameToEntryIMap.Lookup(atlStr) == NULL) {
+		mNameToEntryIMap.SetAt(atlStr, entry);
+	}
 
 	if (!internal)
 		mNextId = id + 1;
