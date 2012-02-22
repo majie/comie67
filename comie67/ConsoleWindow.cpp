@@ -22,9 +22,12 @@ _ATL_FUNC_INFO CConsoleWindow::kClearEventInfo = {
 
 STDMETHODIMP CConsoleWindow::FinalConstruct()
 {
-	AddRef();
+	mRichEditDll = ::LoadLibrary(_T("riched20.dll"));
+	if (mRichEditDll == NULL) {
+		Log(LOG_ERROR, _T("LoadLibrary rich edit failed\n"));
+		mHasRichEdit = FALSE;
+	}
 
-	// Get ConsoleObject
 	CComPtr<IRunningObjectTable> rot;
 	HRESULT hr = ::GetRunningObjectTable(0, &rot);
 	if (FAILED(hr)) {
@@ -46,7 +49,8 @@ STDMETHODIMP CConsoleWindow::FinalConstruct()
 	hr = rot->GetObject(moniker, &unknown);
 	if (FAILED(hr)) {
 		Log(LOG_ERROR, _T("rot->GetObject() failed\n"));
-		return hr;
+		// Still returning S_OK so ::CoCreateInstance() will not fail.
+		return S_OK;
 	}
 
 	mConsole = unknown;
@@ -61,22 +65,17 @@ STDMETHODIMP CConsoleWindow::FinalConstruct()
 		return hr;
 	}
 
-	mRichEditDll = ::LoadLibrary(_T("riched20.dll"));
-	if (mRichEditDll == NULL) {
-		Log(LOG_ERROR, _T("LoadLibrary rich edit failed\n"));
-		mHasRichEdit = FALSE;
-	}
-
+	mConnected = TRUE;
 	return S_OK;
 }
 
 STDMETHODIMP_(void) CConsoleWindow::FinalRelease()
 {
-	DispEventUnadvise(mConsole, &DIID__IConsoleObjectEvents);
-
 	::FreeLibrary(mRichEditDll);
 
-	Release();
+	if (mConnected) {
+		DispEventUnadvise(mConsole, &DIID__IConsoleObjectEvents);
+	}
 }
 
 STDMETHODIMP CConsoleWindow::Create(HWND parent, LPARAM initParam, HWND* newWnd)
@@ -103,7 +102,6 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	// Init GUI
 	SetWindowText(_T("comie67.ConsoleWindow"));
 
-	CWindow textArea;
 	CWindow staticCtrl;
 	staticCtrl.Attach(GetDlgItem(IDC_STATIC1));
 
@@ -139,18 +137,18 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 			mRichEditCtrl.SetFont(hFont);
 		::DeleteObject(hFont);
 
-		mRichEditCtrl.SetWindowText(_T(""));
-
-		textArea.Attach(mRichEditCtrl);
+		if (mConnected) {
+			mRichEditCtrl.SetWindowText(_T(""));
+		} else {
+			mRichEditCtrl.SetWindowText(_T("Failed to Connect to ConsoleObject. ")
+				_T("Please close \"comie67 output window\" then restart IE."));
+		}
 	} else {
 		// Rich Edit Control is not available, show some error messages using the static text control.
-
 		staticCtrl.SetWindowText(_T("riched20.dll load error"));
-		textArea.Attach(staticCtrl);
-		staticCtrl.Detach();
 	}
-	
-	textArea.Detach();
+
+	staticCtrl.Detach();
 
 	return 1;
 }

@@ -45,15 +45,20 @@ STDMETHODIMP CExplorerBar::SetSite(IUnknown* site)
 		bar.Detach();
 
 		CComPtr<IConsoleWindow> consoleWindow;
-		consoleWindow.CoCreateInstance(CLSID_ConsoleWindow, NULL, CLSCTX_INPROC_SERVER);
+		hr = consoleWindow.CoCreateInstance(CLSID_ConsoleWindow, NULL, CLSCTX_INPROC_SERVER);
+		if (FAILED(hr)) {
+			Log(LOG_ERROR, _T("consoleWindow.CoCreateInstance() failed: 0x%08x\n"));
+			return hr;
+		}
 
 		hr = consoleWindow->Create(barWnd, 0, &m_hWndDlg);
 		if (FAILED(hr)) {
 			Log(LOG_ERROR, _T("window->Create(); failed\n"));
-			return AtlHresultFromLastError();
+			return hr;
 		}
 
 		consoleWindow->ShowWindow(SW_SHOW);
+		consoleWindow.Detach();
 	} else {
 		IObjectWithSiteImpl<CExplorerBar>::SetSite(site);
 		Release();
