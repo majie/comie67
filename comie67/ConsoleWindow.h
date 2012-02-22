@@ -28,7 +28,7 @@ class CConsoleWindow :
 public:
 	enum {IDD = IDD_CONSOLEWINDOW};
 
-	CConsoleWindow() : mRichEditDll(NULL), hasRichEdit(TRUE) {}
+	CConsoleWindow() : mRichEditDll(NULL), mHasRichEdit(TRUE) {}
 	virtual ~CConsoleWindow() {}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_CONSOLEWINDOW)
@@ -85,7 +85,7 @@ private:
 	CContainedWindow mRichEditCtrl;
 	CComQIPtr<IConsoleObject> mConsole;
 
-	BOOL hasRichEdit;
+	BOOL mHasRichEdit;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ConsoleWindow), CConsoleWindow)

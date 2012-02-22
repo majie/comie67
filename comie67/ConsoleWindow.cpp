@@ -64,7 +64,7 @@ STDMETHODIMP CConsoleWindow::FinalConstruct()
 	mRichEditDll = ::LoadLibrary(_T("riched20.dll"));
 	if (mRichEditDll == NULL) {
 		Log(LOG_ERROR, _T("LoadLibrary rich edit failed\n"));
-		hasRichEdit = FALSE;
+		mHasRichEdit = FALSE;
 	}
 
 	return S_OK;
@@ -107,7 +107,7 @@ LRESULT CConsoleWindow::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	CWindow staticCtrl;
 	staticCtrl.Attach(GetDlgItem(IDC_STATIC1));
 
-	if (hasRichEdit) {
+	if (mHasRichEdit) {
 		// Rich Edit Control is available.
 
 		RECT replace;
